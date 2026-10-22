@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RhythmCut AI Studio v2.4</title>
+
+  <!-- PWA Theme & Meta -->
+  <meta name="theme-color" content="#06b6d4">
+  <meta name="description" content="Automated Beat-Sync & Precision Studio powered by AI Magic Touch">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <!-- Web App Manifest (Inlined Data URI) -->
+  <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22RhythmCut%20AI%20Studio%22%2C%22short_name%22%3A%22RhythmCut%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%2306b6d4%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%253E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'120'%20fill%3D'%23020617'%2F%253E%253Cpath%20d%3D'M150%20150%20L360%20360'%20stroke%3D'%2306b6d4'%20stroke-width%3D'30'%20stroke-linecap%3D'round'%2F%253E%253Ccircle%20cx%3D'256'%20cy%3D'256'%20r%3D'80'%20fill%3D'%23d946ef'%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+
+  <!-- Tailwind CSS & FontAwesome Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
+            accent: { cyan: '#06b6d4', magenta: '#d946ef' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Custom scrollbar hiding for horizontal tab navigation */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-dark-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
+
+  <!-- TOP HEADER -->
+  <header class="bg-dark-900 border-b border-dark-800 px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-lg">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-fuchsia-500 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20">
+        <i class="fa-solid fa-scissors text-lg transform -rotate-45"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-base sm:text-lg font-black tracking-wider bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-white bg-clip-text text-transparent">
+            RhythmCut AI
+          </h1>
+          <span class="px-2 py-0.5 text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-full">v2.4</span>
+        </div>
+        <p class="text-[11px] sm:text-xs text-slate-400">Automated Beat-Sync & Precision Studio</p>
+      </div>
+    </div>
+
+    <!-- USER PROFILE BADGE -->
+    <div class="flex items-center gap-3 sm:gap-4">
+      <div class="hidden sm:flex flex-col items-end">
+        <span class="text-xs font-bold text-white">Azzbash</span>
+        <span class="text-[10px] text-fuchsia-400 font-medium">Pro Creator Tier</span>
+      </div>
+      <div class="w-9 h-9 rounded-full bg-dark-800 border border-fuchsia-500/40 flex items-center justify-center text-slate-200 font-bold text-xs shadow-inner">
+        AZ
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="bg-dark-900/80 backdrop-blur-md border-b border-dark-800 px-4 sm:px-6 py-2 overflow-x-auto no-scrollbar">
+    <div class="max-w-7xl mx-auto flex items-center gap-2 text-xs font-semibold whitespace-nowrap">
+      <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-4 py-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-chart-line"></i> Dashboard
+      </button>
+      <button onclick="switchTab('editor')" id="tab-editor" class="px-4 py-2 rounded-xl text-slate-400 hover:bg-dark-800 hover:text-slate-200 flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-film"></i> Timeline Editor
+      </button>
+      <button onclick="switchTab('magic')" id="tab-magic" class="px-4 py-2 rounded-xl text-slate-400 hover:bg-dark-800 hover:text-slate-200 flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Magic Touch
+      </button>
+      <button onclick="switchTab('publisher')" id="tab-publisher" class="px-4 py-2 rounded-xl text-slate-400 hover:bg-dark-800 hover:text-slate-200 flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-share-nodes"></i> Social Publisher
+      </button>
+      <button onclick="switchTab('settings')" id="tab-settings" class="px-4 py-2 rounded-xl text-slate-400 hover:bg-dark-800 hover:text-slate-200 flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-gear"></i> Settings
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- TAB 1: DASHBOARD -->
+    <section id="view-dashboard" class="space-y-6">
+      <div class="bg-gradient-to-r from-dark-900 via-dark-900 to-fuchsia-950/20 p-6 rounded-3xl border border-dark-800 shadow-xl relative overflow-hidden">
+        <div class="relative z-10 space-y-2">
+          <h2 class="text-xl sm:text-2xl font-black text-white">Welcome back, Azzbash 🎧🔥</h2>
+          <p class="text-xs sm:text-sm text-slate-400 max-w-2xl">
+            Your automated Librosa beat-detection engine and AI Magic Touch polish suites are fully primed. Ready to produce your next viral vertical short?
+          </p>
+          <div class="pt-3 flex flex-wrap gap-3">
+            <button onclick="switchTab('editor')" class="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl text-xs font-bold shadow-lg shadow-cyan-500/25 hover:opacity-90 active:scale-95 transition-all">
+              Open Timeline Editor
+            </button>
+            <button onclick="switchTab('magic')" class="px-5 py-2.5 bg-dark-800 border border-dark-700 text-slate-300 rounded-xl text-xs font-bold hover:bg-dark-700 active:scale-95 transition-all">
+              Configure AI Polish
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- METRICS GRID -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-dark-900 p-5 rounded-2xl border border-dark-800">
+          <p class="text-xs text-slate-400 font-medium">Total Renders</p>
+          <h3 class="text-2xl font-black text-white mt-1">142</h3>
+          <p class="text-[10px] text-emerald-400 mt-1"><i class="fa-solid fa-arrow-trend-up"></i> ↑ 18% from last week</p>
+        </div>
+        <div class="bg-dark-900 p-5 rounded-2xl border border-dark-800">
+          <p class="text-xs text-slate-400 font-medium">Total Views Generated</p>
+          <h3 class="text-2xl font-black text-cyan-400 mt-1">1.8M</h3>
+          <p class="text-[10px] text-cyan-400 mt-1"><i class="fa-solid fa-eye"></i> ↑ 34.2K today</p>
+        </div>
+        <div class="bg-dark-900 p-5 rounded-2xl border border-dark-800">
+          <p class="text-xs text-slate-400 font-medium">AI Beat Accuracy</p>
+          <h3 class="text-2xl font-black text-emerald-400 mt-1">99.4%</h3>
+          <p class="text-[10px] text-slate-500 mt-1">Librosa Engine active</p>
+        </div>
+        <div class="bg-dark-900 p-5 rounded-2xl border border-dark-800">
+          <p class="text-xs text-slate-400 font-medium">Active Accounts</p>
+          <h3 class="text-2xl font-black text-fuchsia-400 mt-1">3 / 3</h3>
+          <p class="text-[10px] text-fuchsia-400 mt-1">IG, TikTok, YouTube linked</p>
+        </div>
+      </div>
+
+      <!-- RECENT PROJECTS -->
+      <div class="bg-dark-900 p-6 rounded-3xl border border-dark-800 space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-base font-bold text-white">Recent Music Promo Projects</h3>
+          <button onclick="switchTab('editor')" class="text-xs text-cyan-400 hover:text-cyan-300 hover:underline">View All Projects →</button>
+        </div>
+
+        <div class="space-y-3">
+          <div class="p-4 bg-dark-950 rounded-2xl border border-dark-800 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-slate-800 transition">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-black shrink-0">
+                9:16
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white">Azzbash - Midnight Runner (Official Teaser)</h4>
+                <p class="text-xs text-slate-400">Rendered 2 hours ago • AI Magic Touch: Cyber Cinematic</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-semibold rounded-lg">Ready to Publish</span>
+              <button onclick="switchTab('publisher')" class="px-4 py-1.5 bg-cyan-500 text-white rounded-lg text-xs font-bold hover:bg-cyan-600 transition">Publish Now</button>
+            </div>
+          </div>
+
+          <div class="p-4 bg-dark-950 rounded-2xl border border-dark-800 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-slate-800 transition">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-fuchsia-500/10 border border-fuchsia-500/30 flex items-center justify-center text-fuchsia-400 font-black shrink-0">
+                9:16
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white">Cyberpunk Sunset (Beat Drop Edit)</h4>
+                <p class="text-xs text-slate-400">Rendered yesterday • AI Magic Touch: Vibrant TikTok</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 bg-dark-800 text-slate-400 text-xs font-semibold rounded-lg">Published to IG (12.4K Views)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: TIMELINE EDITOR -->
+    <section id="view-editor" class="space-y-6 hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- PREVIEW PLAYER -->
+        <div class="bg-dark-900 p-6 rounded-3xl border border-dark-800 flex flex-col items-center justify-center">
+          <div class="w-56 h-96 bg-dark-950 rounded-2xl border border-cyan-500/30 relative flex flex-col items-center justify-center p-4 overflow-hidden shadow-2xl group">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark-950 via-transparent to-transparent z-10 pointer-events-none"></div>
+            
+            <div class="text-center z-20 space-y-2">
+              <span class="px-2 py-0.5 bg-fuchsia-500/20 text-fuchsia-400 text-[10px] font-bold rounded-md">✨ AI Magic Active</span>
+              <h3 class="text-xl font-black text-white tracking-widest">AZZBASH</h3>
+              <p class="text-xs text-cyan-400 font-semibold italic">"MIDNIGHT RUNNER"</p>
+            </div>
+
+            <!-- SIMULATED WAVEFORM BARS -->
+            <div id="playback-bars" class="absolute bottom-6 z-20 flex items-center gap-1 transition-opacity duration-300">
+              <div class="w-1 h-6 bg-cyan-400 rounded-full animate-bounce"></div>
+              <div class="w-1 h-10 bg-fuchsia-400 rounded-full animate-bounce [animation-delay:75ms]"></div>
+              <div class="w-1 h-12 bg-cyan-400 rounded-full animate-bounce [animation-delay:150ms]"></div>
+              <div class="w-1 h-8 bg-fuchsia-400 rounded-full animate-bounce [animation-delay:100ms]"></div>
+            </div>
+
+            <div class="absolute bottom-2 left-3 right-3 z-30 flex justify-between text-[10px] text-slate-400">
+              <span>00:04</span>
+              <span>00:30</span>
+            </div>
+          </div>
+          <button onclick="togglePlayback()" id="play-btn" class="mt-4 px-4 py-2 bg-dark-800 border border-dark-700 text-xs font-bold text-white rounded-xl hover:bg-dark-700 transition">
+            <i class="fa-solid fa-pause mr-1"></i> Pause Preview
+          </button>
+        </div>
+
+        <!-- TIMELINE CONTROLS -->
+        <div class="lg:col-span-2 bg-dark-900 p-6 rounded-3xl border border-dark-800 space-y-6">
+          <div class="flex justify-between items-center">
+            <h3 class="text-base font-bold text-white">Multitrack Timeline (Drag & Drop)</h3>
+            <div class="flex gap-2">
+              <button class="px-3 py-1 bg-dark-800 text-slate-300 rounded-lg text-xs font-semibold hover:bg-dark-700 transition">Zoom In</button>
+              <button class="px-3 py-1 bg-dark-800 text-slate-300 rounded-lg text-xs font-semibold hover:bg-dark-700 transition">Zoom Out</button>
+            </div>
+          </div>
+
+          <div class="space-y-3 font-mono text-xs">
+            <div class="p-3 bg-dark-950 rounded-xl border border-dark-800 flex justify-between items-center">
+              <div class="flex items-center gap-2 overflow-hidden">
+                <i class="fa-solid fa-video text-cyan-400 shrink-0"></i>
+                <span class="text-slate-200 truncate">raw_drone_footage.mp4</span>
+              </div>
+              <span class="text-slate-500 shrink-0 ml-2">0:00 - 0:30 (1.2 GB)</span>
+            </div>
+
+            <div class="p-3 bg-dark-950 rounded-xl border border-cyan-500/30 flex justify-between items-center bg-cyan-500/5">
+              <div class="flex items-center gap-2 overflow-hidden">
+                <i class="fa-solid fa-music text-fuchsia-400 shrink-0"></i>
+                <span class="text-white font-bold truncate">midnight_runner_master.wav</span>
+              </div>
+              <span class="px-2 py-0.5 bg-fuchsia-500/20 text-fuchsia-400 text-[10px] rounded shrink-0 ml-2">128 BPM Beat Snap</span>
+            </div>
+
+            <div class="p-3 bg-dark-950 rounded-xl border border-dark-800 flex justify-between items-center">
+              <div class="flex items-center gap-2 overflow-hidden">
+                <i class="fa-solid fa-closed-captioning text-emerald-400 shrink-0"></i>
+                <span class="text-slate-200 truncate">Auto Lyrics Captions</span>
+              </div>
+              <span class="text-emerald-400 shrink-0 ml-2">"OUT NOW ON SPOTIFY"</span>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-dark-800 flex justify-end gap-3">
+            <button onclick="switchTab('magic')" class="px-5 py-2.5 bg-gradient-to-r from-fuchsia-500 to-cyan-500 text-white rounded-xl text-xs font-bold hover:opacity-90 transition">
+              Export Render
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 3: AI MAGIC TOUCH -->
+    <section id="view-magic" class="space-y-6 hidden">
+      <div class="bg-dark-900 p-6 rounded-3xl border border-dark-800 space-y-6">
+        <div>
+          <h3 class="text-base font-bold text-white">Cinematic Color Grading Profiles</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Powered by automated MoviePy color pipelines</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div onclick="selectProfile(this)" class="p-4 bg-cyan-500/10 border border-cyan-500/40 rounded-2xl text-cyan-400 font-bold text-xs space-y-1 cursor-pointer profile-card transition-all">
+            <i class="fa-solid fa-circle-dot"></i>
+            <p>Cyber Cinematic</p>
+            <p class="text-[10px] text-slate-400 font-normal">Boosts contrast & lifting shadow neon tones</p>
+          </div>
+          <div onclick="selectProfile(this)" class="p-4 bg-dark-950 border border-dark-800 rounded-2xl text-slate-400 font-semibold text-xs space-y-1 hover:border-slate-700 cursor-pointer profile-card transition-all">
+            <i class="fa-regular fa-circle"></i>
+            <p class="text-white">Vibrant TikTok</p>
+            <p class="text-[10px] text-slate-500 font-normal">Punchy feed saturation look</p>
+          </div>
+          <div onclick="selectProfile(this)" class="p-4 bg-dark-950 border border-dark-800 rounded-2xl text-slate-400 font-semibold text-xs space-y-1 hover:border-slate-700 cursor-pointer profile-card transition-all">
+            <i class="fa-regular fa-circle"></i>
+            <p class="text-white">Moody Noir</p>
+            <p class="text-[10px] text-slate-500 font-normal">Deep desaturated shadows</p>
+          </div>
+          <div onclick="selectProfile(this)" class="p-4 bg-dark-950 border border-dark-800 rounded-2xl text-slate-400 font-semibold text-xs space-y-1 hover:border-slate-700 cursor-pointer profile-card transition-all">
+            <i class="fa-regular fa-circle"></i>
+            <p class="text-white">Golden Hour</p>
+            <p class="text-[10px] text-slate-500 font-normal">Warm vintage highlights</p>
+          </div>
+        </div>
+
+        <div class="p-4 bg-dark-950 rounded-2xl border border-dark-800 space-y-3">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-300 font-medium">Real-time Waveform Visualizer Style</span>
+            <span class="text-cyan-400 font-bold">Neon Glow Bars</span>
+          </div>
+          <div class="h-8 flex items-center justify-center gap-1.5 bg-dark-900 rounded-xl p-2 border border-dark-800">
+            <div class="w-1.5 h-full bg-cyan-400 rounded-full"></div>
+            <div class="w-1.5 h-2/3 bg-fuchsia-400 rounded-full"></div>
+            <div class="w-1.5 h-full bg-cyan-400 rounded-full"></div>
+            <div class="w-1.5 h-1/2 bg-fuchsia-400 rounded-full"></div>
+            <div class="w-1.5 h-full bg-cyan-400 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: SOCIAL PUBLISHER -->
+    <section id="view-publisher" class="space-y-6 hidden">
+      <div class="bg-dark-900 p-6 rounded-3xl border border-dark-800 space-y-4">
+        <h3 class="text-base font-bold text-white">1-Click Direct Social Publishing</h3>
+        <p class="text-xs text-slate-400">Distribute your rendered shorts instantly using direct Supabase cloud storage links.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+          <div class="p-4 bg-dark-950 border border-dark-800 rounded-2xl flex flex-col justify-between space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-pink-400"><i class="fa-brands fa-instagram"></i> Instagram Reels</span>
+              <span class="text-[10px] text-emerald-400 font-bold">Connected</span>
+            </div>
+            <button onclick="triggerPublish('Instagram Reels')" class="w-full py-2 bg-pink-500 text-white font-bold rounded-xl text-xs hover:bg-pink-600 transition">Publish to Reels</button>
+          </div>
+
+          <div class="p-4 bg-dark-950 border border-dark-800 rounded-2xl flex flex-col justify-between space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-cyan-400"><i class="fa-brands fa-tiktok"></i> TikTok Shorts</span>
+              <span class="text-[10px] text-emerald-400 font-bold">Connected</span>
+            </div>
+            <button onclick="triggerPublish('TikTok')" class="w-full py-2 bg-cyan-500 text-white font-bold rounded-xl text-xs hover:bg-cyan-600 transition">Publish to TikTok</button>
+          </div>
+
+          <div class="p-4 bg-dark-950 border border-dark-800 rounded-2xl flex flex-col justify-between space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-red-500"><i class="fa-brands fa-youtube"></i> YouTube Shorts</span>
+              <span class="text-[10px] text-emerald-400 font-bold">Connected</span>
+            </div>
+            <button onclick="triggerPublish('YouTube Shorts')" class="w-full py-2 bg-red-600 text-white font-bold rounded-xl text-xs hover:bg-red-700 transition">Publish to Shorts</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: SETTINGS & DEPLOYMENT CONFIG -->
+    <section id="view-settings" class="space-y-6 hidden">
+      <div class="bg-dark-900 p-6 rounded-3xl border border-dark-800 space-y-4">
+        <h3 class="text-base font-bold text-white">App Configurations & Endpoints</h3>
+        
+        <div class="space-y-4 text-xs font-mono">
+          <div>
+            <label for="cfg-endpoint" class="text-slate-400 block mb-1">Supabase Endpoint URL</label>
+            <div class="flex gap-2">
+              <input type="text" id="cfg-endpoint" readonly value="https://rhythmcut-ai-studio.supabase.co" class="w-full p-3 bg-dark-950 border border-dark-800 rounded-xl text-cyan-400 outline-none focus:border-cyan-500/50">
+              <button onclick="copyVal('cfg-endpoint')" class="px-4 bg-dark-800 text-slate-300 rounded-xl font-sans hover:bg-dark-700 transition shrink-0"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+          </div>
+
+          <div>
+            <label for="cfg-delete" class="text-slate-400 block mb-1">Account Deletion Workflow URL</label>
+            <div class="flex gap-2">
+              <input type="text" id="cfg-delete" readonly value="https://rhythmcut-ai-studio.supabase.co/storage/v1/object/public/static/delete.html" class="w-full p-3 bg-dark-950 border border-dark-800 rounded-xl text-slate-300 outline-none focus:border-cyan-500/50">
+              <button onclick="copyVal('cfg-delete')" class="px-4 bg-dark-800 text-slate-300 rounded-xl font-sans hover:bg-dark-700 transition shrink-0"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+          </div>
+
+          <div>
+            <label for="cfg-sku" class="text-slate-400 block mb-1">Package SKU</label>
+            <div class="flex gap-2">
+              <input type="text" id="cfg-sku" readonly value="com.usongomedia.rhythmcut.ai" class="w-full p-3 bg-dark-950 border border-dark-800 rounded-xl text-fuchsia-400 outline-none focus:border-cyan-500/50">
+              <button onclick="copyVal('cfg-sku')" class="px-4 bg-dark-800 text-slate-300 rounded-xl font-sans hover:bg-dark-700 transition shrink-0"><i class="fa-solid fa-copy"></i> Copy</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NOTIFICATION TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-dark-800 text-white text-xs px-4 py-3 rounded-xl border border-cyan-500/30 shadow-2xl flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-cyan-400"></i>
+    <span id="toast-msg">Action completed</span>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    const TABS = ['dashboard', 'editor', 'magic', 'publisher', 'settings'];
+
+    function switchTab(targetId) {
+      TABS.forEach(id => {
+        const view = document.getElementById(`view-${id}`);
+        const btn = document.getElementById(`tab-${id}`);
+        
+        if (id === targetId) {
+          view.classList.remove('hidden');
+          btn.className = "px-4 py-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 flex items-center gap-2 transition-all";
+        } else {
+          view.classList.add('hidden');
+          btn.className = "px-4 py-2 rounded-xl text-slate-400 hover:bg-dark-800 hover:text-slate-200 flex items-center gap-2 transition-all";
+        }
+      });
+    }
+
+    let isPlaying = true;
+    function togglePlayback() {
+      const bars = document.getElementById('playback-bars');
+      const btn = document.getElementById('play-btn');
+      isPlaying = !isPlaying;
+
+      if (isPlaying) {
+        bars.classList.remove('opacity-20');
+        btn.innerHTML = '<i class="fa-solid fa-pause mr-1"></i> Pause Preview';
+        showToast('Playback resumed', 'fa-play');
+      } else {
+        bars.classList.add('opacity-20');
+        btn.innerHTML = '<i class="fa-solid fa-play mr-1"></i> Resume Preview';
+        showToast('Playback paused', 'fa-pause');
+      }
+    }
+
+    function selectProfile(element) {
+      document.querySelectorAll('.profile-card').forEach(card => {
+        card.className = "p-4 bg-dark-950 border border-dark-800 rounded-2xl text-slate-400 font-semibold text-xs space-y-1 hover:border-slate-700 cursor-pointer profile-card transition-all";
+        const icon = card.querySelector('i');
+        if (icon) icon.className = "fa-regular fa-circle";
+      });
+
+      element.className = "p-4 bg-cyan-500/10 border border-cyan-500/40 rounded-2xl text-cyan-400 font-bold text-xs space-y-1 cursor-pointer profile-card transition-all";
+      const currentIcon = element.querySelector('i');
+      if (currentIcon) currentIcon.className = "fa-solid fa-circle-dot";
+      
+      const profileName = element.querySelector('p').innerText;
+      showToast(`Selected Color Profile: ${profileName}`, 'fa-wand-magic-sparkles');
+    }
+
+    function triggerPublish(platform) {
+      showToast(`Queued render for ${platform}!`, 'fa-paper-plane');
+    }
+
+    async function copyVal(id) {
+      const input = document.getElementById(id);
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(input.value);
+        } else {
+          input.select();
+          document.execCommand('copy');
+        }
+        showToast('Copied to clipboard!', 'fa-copy');
+      } catch (err) {
+        showToast('Failed to copy', 'fa-triangle-exclamation');
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(msg, iconClass = 'fa-circle-check') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.innerText = msg;
+      toastIcon.className = `fa-solid ${iconClass} text-cyan-400`;
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {
+          // Fallback handling when offline script is absent
+        });
+      });
+    }
+  </script>
+</body>
+</html>
