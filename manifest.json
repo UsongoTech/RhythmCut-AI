@@ -1,0 +1,16 @@
+{
+  "name": "RhythmCut AI Studio",
+  "short_name": "RhythmCut AI",
+  "description": "Mobile-first creation suite and audio beat detector for music and video creation.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#0d1117",
+  "icons": [
+    {
+      "src": "https://rhythmcut-ai.vercel.app/favicon.ico",
+      "sizes": "192x192 512x512",
+      "type": "image/x-icon"
+    }
+  ]
+}
