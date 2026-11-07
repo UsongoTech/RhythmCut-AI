@@ -2,7 +2,7 @@
   "name": "rhythmcut-ai",
   "version": "1.0.0",
   "description": "RhythmCut AI Studio is the ultimate mobile-first creation suite designed for musicians, content creators, and vertical video editors. Eliminate hours of manual timeline cutting and let advanced Librosa-powered audio analysis automatically snap your clips, drone footage, and visualizers to the exact beat drop.",
-  "main": "App.js",
+  "main": "expo-router/entry",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/UsongoTech/RhythmCut-AI/issues"
   },
-  "homepage": "https://github.com/UsongoTech/RhythmCut-AI#readme"
+  "homepage": "https://github.com/UsongoTech/RhythmCut-AI#readme",
+  "dependencies": {
+    "expo": "^58.0.23",
+    "react": "19.3.0",
+    "react-native": "0.88.1"
+  }
 }

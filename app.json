@@ -1,8 +1,15 @@
 {
   "expo": {
+    "name": "RhythmCut-AI",
+    "slug": "RhythmCut-AI",
+    "version": "1.0.0",
+    "owner": "azzbashs-team",
+    "android": {
+      "package": "com.azzbash.rhythmcutai"
+    },
     "extra": {
       "eas": {
-        "projectId": "867195a1-a3da-402d-a196-0d14dcc7ebde"
+        "projectId": "2c2fcaef-f634-4355-8bc6-0c9de60f4b1a"
       }
     }
   }
